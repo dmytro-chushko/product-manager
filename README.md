@@ -10,7 +10,7 @@
 ### Clone the repo from comand line:
 
 ```bash
-$ git clone https://github.com/dmytro-chushko/article-manager.git
+$ git clone https://github.com/dmytro-chushko/product-manager.git
 $ cd product-manager
 ```
 
