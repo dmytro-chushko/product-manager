@@ -1,6 +1,6 @@
 # Product-manager
 
-- RESTfull API for product management with a model with the following fields:
+- RESTful API for product management with a model with the following fields:
   name, description, price, category.
 - With routes for creating, reading, updating, and deleting products.
 - Routes protected by JSON Web Tokens (JWT)
@@ -71,3 +71,17 @@ Create `.development.env` file in the root directory and set the next variables:
 - POSTGRES_DB = databasee name
 - JWT_SECRET_KEY = secret key for JWT service
 - TOKEN_EXP_IN = lifetime access token expiration 24h
+
+## Technologies
+
+### Base backend libraries
+
+- **Framework**: NestJS
+- **Validation**: Class Validator
+- **ORM**: TypeORM
+- **DB**: PostgreSQL
+- **API Protocol**: REST(OpenAPISwagger)
+
+### Environment:
+
+- **Docker Compose**

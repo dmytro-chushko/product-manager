@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsPositive, IsString, Max, MaxLength } from 'class-validator';
-import { DataLimitation } from 'src/utils/consts/DataLimitation';
-import { ValidationMessage } from 'src/utils/consts';
+import { DataLimitation, ValidationMessage } from 'src/utils/consts';
 
 export class CreateProductDto {
   @ApiProperty({
