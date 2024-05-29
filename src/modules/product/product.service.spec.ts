@@ -1,31 +1,15 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
+import {
+  REQUEST_PRODUCT_MOCK,
+  RESPONSE_PRODUCT_MOCK,
+} from 'src/utils/consts/mockup';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 import { Product } from './entities/product.entity';
 import { ProductService } from './product.service';
-
-const REQUEST_PRODUCT_MOCK = {
-  title: 'iPhone',
-  description:
-    'Mobile device that combines an iPod music and video player, mobile phone and Internet browser capability',
-  price: 1500,
-  category: 'Smartphones',
-};
-
-const RESPONSE_PRODUCT_MOCK = {
-  id: '986dcaf4-c1ea-4218-b6b4-e4fd95a3c28e',
-  title: 'iPhone',
-  description:
-    'Mobile device that combines an iPod music and video player, mobile phone and Internet browser capability',
-  price: 1500,
-  category: 'Smartphones',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
-
-const VALID_ID = '986dcaf4-c1ea-4218-b6b4-e4fd95a3c28e';
-const INVALID_ID = '086dcaf4-c1ea-4218-b6b4-e4fd95a3c28e';
 
 describe('ProductService', () => {
   let service: ProductService;
@@ -86,16 +70,98 @@ describe('ProductService', () => {
     expect(result).toEqual(products);
   });
 
-  it('findOneById => should find a user by a given id and return its data', async () => {
-    const id = VALID_ID;
-    const product = RESPONSE_PRODUCT_MOCK as Product;
+  describe('findOneById', () => {
+    it('should find a user by a given id and return its data', async () => {
+      const id = RESPONSE_PRODUCT_MOCK.id;
+      const product = RESPONSE_PRODUCT_MOCK as Product;
 
-    jest.spyOn(mockProductRepository, 'findOneBy').mockReturnValue(product);
+      jest.spyOn(mockProductRepository, 'findOneBy').mockReturnValue(product);
 
-    const result = await service.findOneById(id);
+      const result = await service.findOneById(id);
 
-    expect(mockProductRepository.findOneBy).toHaveBeenCalled();
-    expect(mockProductRepository.findOneBy).toHaveBeenCalledWith({ id });
-    expect(result).toEqual(product);
+      expect(mockProductRepository.findOneBy).toHaveBeenCalled();
+      expect(mockProductRepository.findOneBy).toHaveBeenCalledWith({ id });
+      expect(result).toEqual(product);
+    });
+
+    it('should throw NotFoundException if product is not found', async () => {
+      const id = RESPONSE_PRODUCT_MOCK.id;
+
+      jest.spyOn(mockProductRepository, 'findOneBy').mockReturnValue(null);
+
+      await expect(service.findOneById(id)).rejects.toThrow(NotFoundException);
+
+      expect(mockProductRepository.findOneBy).toHaveBeenCalled();
+      expect(mockProductRepository.findOneBy).toHaveBeenCalledWith({ id });
+    });
+  });
+
+  describe('update', () => {
+    it('should update and return a updated product', async () => {
+      const id = RESPONSE_PRODUCT_MOCK.id;
+      const product = RESPONSE_PRODUCT_MOCK;
+      const updateProductDto = { price: 1600 } as UpdateProductDto;
+      const updatedProduct = { ...product, ...updateProductDto };
+
+      jest.spyOn(service, 'findOneById').mockResolvedValue(product);
+      jest.spyOn(mockProductRepository, 'save').mockReturnValue(updatedProduct);
+
+      const result = await service.update(id, updateProductDto);
+
+      expect(service.findOneById).toHaveBeenCalled();
+      expect(service.findOneById).toHaveBeenCalledWith(id);
+      expect(mockProductRepository.save).toHaveBeenCalled();
+      expect(mockProductRepository.save).toHaveBeenCalledWith(updatedProduct);
+
+      expect(result).toEqual(updatedProduct);
+    });
+
+    it('should throw NotFoundException if product is not found', async () => {
+      const id = RESPONSE_PRODUCT_MOCK.id;
+      const updateProductDto = { price: 1600 } as UpdateProductDto;
+
+      jest
+        .spyOn(service, 'findOneById')
+        .mockRejectedValue(new NotFoundException());
+
+      await expect(service.update(id, updateProductDto)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      expect(service.findOneById).toHaveBeenCalled();
+      expect(service.findOneById).toHaveBeenCalledWith(id);
+    });
+  });
+
+  describe('remove', () => {
+    it('should remove and return a removed product', async () => {
+      const id = RESPONSE_PRODUCT_MOCK.id;
+      const product = RESPONSE_PRODUCT_MOCK;
+
+      jest.spyOn(service, 'findOneById').mockResolvedValue(product);
+      jest.spyOn(mockProductRepository, 'remove').mockReturnValue(product);
+
+      const result = await service.remove(id);
+
+      expect(service.findOneById).toHaveBeenCalled();
+      expect(service.findOneById).toHaveBeenCalledWith(id);
+      expect(mockProductRepository.remove).toHaveBeenCalled();
+      expect(mockProductRepository.remove).toHaveBeenCalledWith(product);
+
+      expect(result).toEqual(product);
+    });
+
+    it('should throw NotFoundException if product is not found', async () => {
+      const id = RESPONSE_PRODUCT_MOCK.id;
+
+      jest
+        .spyOn(service, 'findOneById')
+        .mockRejectedValue(new NotFoundException());
+
+      await expect(service.remove(id)).rejects.toThrow(NotFoundException);
+
+      expect(service.findOneById).toHaveBeenCalled();
+      expect(service.findOneById).toHaveBeenCalledWith(id);
+    });
   });
 });
