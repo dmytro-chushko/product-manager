@@ -1,16 +1,16 @@
-import { Controller, Get, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
 
-import { UserService } from './user.service';
 import {
   ApiCookieAuth,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { UserRoute } from 'src/utils/consts/route';
-import { User } from './entities/user.entity';
 import { ApiTagName } from 'src/utils/consts';
+import { UserRoute } from 'src/utils/consts/route';
 import { JwtAuthGuard } from '../auth/auth-jwt.guard';
+import { User } from './entities/user.entity';
+import { UserService } from './user.service';
 
 @ApiTags(ApiTagName.USER)
 @Controller(UserRoute.DEFAULT)
