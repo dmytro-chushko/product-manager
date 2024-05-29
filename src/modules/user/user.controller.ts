@@ -11,6 +11,8 @@ import { UserRoute } from 'src/utils/consts/route';
 import { JwtAuthGuard } from '../auth/auth-jwt.guard';
 import { User } from './entities/user.entity';
 import { UserService } from './user.service';
+import { UserResponseDto } from './dto/user-response.dto';
+import { IUserResponse } from 'src/types';
 
 @ApiTags(ApiTagName.USER)
 @Controller(UserRoute.DEFAULT)
@@ -20,10 +22,10 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @ApiOperation({ summary: 'Receive all users' })
-  @ApiResponse({ status: 200, type: [User] })
+  @ApiResponse({ status: 200, type: [UserResponseDto] })
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(): Promise<IUserResponse[]> {
+    return this.userService.getAllUsers();
   }
 
   @ApiOperation({ summary: 'Remove user by id' })
