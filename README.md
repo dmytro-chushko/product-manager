@@ -22,25 +22,6 @@ $ npm i
 
 ## To run the project:
 
-### To run with Docker:
-
-1. Make sure you have an actual version of [Docker](https://www.docker.com/)
-   installed on your computer. Download and install if it is necessary.
-2. Configure `.env` file like described below
-3. Staying in root directory build the docker images from command line:
-
-```bash
-$ docker-compose build
-```
-
-4. Run the project:
-
-```bash
-$ docker-compose up
-```
-
-5. You may change settings in `docker-compose.yml` file
-
 ### To run from your local machine:
 
 1. Make sure you have a version of [Node.js](https://nodejs.org/en/download) not
@@ -81,7 +62,4 @@ Create `.development.env` file in the root directory and set the next variables:
 - **ORM**: TypeORM
 - **DB**: PostgreSQL
 - **API Protocol**: REST(OpenAPISwagger)
-
-### Environment:
-
-- **Docker Compose**
+- **Testing**: Jest
