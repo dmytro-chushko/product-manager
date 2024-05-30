@@ -47,7 +47,7 @@ export class AuthController {
   @ApiOperation({ summary: "User's logging out" })
   @ApiResponse({
     status: 201,
-    description: 'User log out',
+    description: 'User logs out',
   })
   @ApiCookieAuth()
   @UseGuards(JwtAuthGuard)
